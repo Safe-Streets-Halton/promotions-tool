@@ -15,12 +15,13 @@ Deno.test("shouldSkipAuth - identifies static resources correctly", () => {
     { path: "/static/images/logo.png", expected: true, reason: "Image files should skip auth" },
     { path: "/_fresh/build.js", expected: true, reason: "Fresh framework files should skip auth" },
     { path: "/_fresh/chunk-abc123.js", expected: true, reason: "Fresh chunks should skip auth" },
+
+    { path: "/", expected: true, reason: "Root path should skip auth" },
     
     // Dynamic resources that should require auth
     { path: "/dashboard", expected: false, reason: "Dashboard should require auth" },
     { path: "/api/users", expected: false, reason: "API endpoints should require auth" },
-    { path: "/login", expected: false, reason: "Login page should be processed" },
-    { path: "/", expected: false, reason: "Root path should be processed" },
+    { path: "/login", expected: false, reason: "Login page should be processed" },    
     { path: "/profile/settings", expected: false, reason: "User pages should require auth" },
   ];
 

@@ -23,7 +23,7 @@ export interface UserData {
  * Checks if a URL path should skip authentication (static resources)
  */
 export function shouldSkipAuth(pathname: string): boolean {
-  return pathname.startsWith("/static/") || pathname.startsWith("/_fresh/");
+  return pathname.startsWith("/static/") || pathname.startsWith("/_fresh/") || pathname === "/";
 }
 
 /**
