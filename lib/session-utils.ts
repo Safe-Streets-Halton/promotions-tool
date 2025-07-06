@@ -1,4 +1,4 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import { Session, SupabaseClient, User } from "@supabase/supabase-js";
 import { parseCookies } from "./cookie-utils.ts";
 
 export interface SessionTokens {
@@ -10,8 +10,8 @@ export interface SessionData {
   access_token: string;
   refresh_token: string;
   expires_at: number;
-  session: any;
-  user: any;
+  session: Session;
+  user: User;
 }
 
 export interface UserData {
