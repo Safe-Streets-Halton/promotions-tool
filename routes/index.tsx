@@ -1,5 +1,6 @@
 import { FreshContext, page } from "fresh";
 import { define, State } from "../utils.ts";
+import { Button } from "../components/Button.tsx";
 
 interface PageData {
   isLoggedIn: boolean;
@@ -54,12 +55,13 @@ export default define.page<typeof handler>(function Home({ data }: { data: PageD
                 The main application features are currently under development.
               </p>
               <div class="flex justify-center space-x-4">
-                <a
+                <Button
                   href="/logout"
-                  class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                  variant="outline"
+                  size="md"
                 >
                   Sign Out
-                </a>
+                </Button>
               </div>
             </div>
           </div>
@@ -93,19 +95,23 @@ export default define.page<typeof handler>(function Home({ data }: { data: PageD
           
           {/* Buttons */}
           <div class="space-y-4">
-            <a
+            <Button
               href="/login"
-              class="block w-full py-3 px-4 bg-green-600 hover:bg-green-700 text-white font-medium rounded transition-colors duration-200 shadow-md hover:shadow-lg"
+              variant="primary"
+              size="md"
+              fullWidth
             >
               Sign In
-            </a>
+            </Button>
             
-            <a
+            <Button
               href={`mailto:${contactEmail}?subject=Access Request - Promotions Tool`}
-              class="block w-full py-3 px-4 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded transition-colors duration-200"
+              variant="secondary"
+              size="md"
+              fullWidth
             >
               Request Access
-            </a>
+            </Button>
           </div>
         </div>
       </div>
