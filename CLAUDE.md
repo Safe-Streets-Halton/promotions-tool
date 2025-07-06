@@ -117,5 +117,18 @@ export const handler = define.handlers<PageData>({
 - Islands are for client-side interactivity; regular components are
   server-rendered
 - Use Test-driven development (TDD) practices with Deno's built-in testing framework
+- Follow TDD standards outlined in `.github/instructions/TestStandards.instructions.md`
 - Access user session data via `ctx.state.user` and `ctx.state.session` in route handlers
 - Session validation occurs automatically via middleware on every request
+
+## Testing Standards
+
+For comprehensive TDD guidelines and best practices, see:
+**[TestStandards.instructions.md](.github/instructions/TestStandards.instructions.md)**
+
+Key testing principles for this project:
+- Write tests first (Red-Green-Refactor cycle)
+- Use `@std/assert` imports from deno.json configuration
+- Place utility functions in separate modules for easier testing
+- Mock external dependencies (Supabase, APIs) but test internal logic with real implementations
+- Use descriptive test names that clearly indicate what is being tested
