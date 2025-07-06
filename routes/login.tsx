@@ -6,6 +6,7 @@ import { Button } from "../components/Button.tsx";
 
 interface LoginPageData {
   error?: string;
+  email?: string;
 }
 
 export const handler = define.handlers<LoginPageData>({
@@ -29,9 +30,7 @@ export const handler = define.handlers<LoginPageData>({
     const password = form.get("password")?.toString();
 
     if (!email || !password) {
-      return new Response("Email and password are required", {
-        status: 400,
-      });
+      return page({ error: "Email and password are required", email });
     }
 
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -40,9 +39,7 @@ export const handler = define.handlers<LoginPageData>({
     });
 
     if (error) {
-      return new Response(error.message, {
-        status: 401,
-      });
+      return page({ error: error.message, email });
     }
 
     // Store session tokens in cookies for server-side persistence
@@ -109,6 +106,7 @@ export default define.page<typeof handler>(
                     name="email"
                     type="email"
                     required
+                    value={data?.email || ""}
                     class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900"
                     placeholder="Enter your email"
                   />
@@ -127,7 +125,6 @@ export default define.page<typeof handler>(
                   />
                 </div>
               </div>
-
               <div class="space-y-4">
                 <Button
                   type="submit"
