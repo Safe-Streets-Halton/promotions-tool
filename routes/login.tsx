@@ -1,45 +1,23 @@
 import { FreshContext, page } from "fresh";
 import { define } from "../utils.ts";
 import { supabase } from "../lib/supabase.ts";
+import { State } from "../utils.ts";
 
 interface LoginPageData {
   error?: string;
 }
 
 export const handler = define.handlers<LoginPageData>({
-  async GET(ctx: FreshContext) {
-    // Check if user is already logged in by validating session from cookies
-    const cookies = ctx.req.headers.get("cookie");
-    
-    if (cookies) {
-      // Parse cookies to extract session tokens
-      const cookieMap = new Map(
-        cookies.split(";").map(cookie => {
-          const [name, value] = cookie.trim().split("=");
-          return [name, value];
-        })
-      );
-      
-      const accessToken = cookieMap.get("sb-access-token");
-      const refreshToken = cookieMap.get("sb-refresh-token");
-      
-      if (accessToken && refreshToken) {
-        // Set the session in the Supabase client and validate it
-        const { data: { session }, error } = await supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-        });
-        
-        if (session && !error) {
-          // User is already logged in, redirect to homepage
-          return new Response("", {
-            status: 302,
-            headers: {
-              Location: "/",
-            },
-          });
-        }
-      }
+  GET(ctx: FreshContext<State>) {
+    // Check if user is already logged in via middleware
+    if (ctx.state.user && ctx.state.session) {
+      // User is already logged in, redirect to homepage
+      return new Response("", {
+        status: 302,
+        headers: {
+          Location: "/",
+        },
+      });
     }
     
     return page({});
