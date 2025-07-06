@@ -21,7 +21,7 @@ export const handler = define.handlers<LoginPageData>({
       });
     }
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -32,12 +32,22 @@ export const handler = define.handlers<LoginPageData>({
       });
     }
 
+    // Store session tokens in cookies for server-side persistence
+    const headers = new Headers();
+    headers.set("Location", "/");
+    
+    if (data.session) {      
+      headers.append("Set-Cookie", `sb-access-token=${data.session.access_token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${data.session.expires_in}`);
+      headers.append("Set-Cookie", `sb-refresh-token=${data.session.refresh_token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${30 * 24 * 60 * 60}`); // 30 days
+                  
+      console.log("User logged in:", data.user?.email);
+      console.log("Session expires at:", new Date(data.session.expires_at! * 1000));
+    }
+
     // Redirect to home page on successful login
     return new Response("", {
       status: 302,
-      headers: {
-        Location: "/",
-      },
+      headers,
     });
   },
 });
