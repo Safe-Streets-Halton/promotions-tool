@@ -7,7 +7,41 @@ interface LoginPageData {
 }
 
 export const handler = define.handlers<LoginPageData>({
-  GET(_ctx: FreshContext) {
+  async GET(ctx: FreshContext) {
+    // Check if user is already logged in by validating session from cookies
+    const cookies = ctx.req.headers.get("cookie");
+    
+    if (cookies) {
+      // Parse cookies to extract session tokens
+      const cookieMap = new Map(
+        cookies.split(";").map(cookie => {
+          const [name, value] = cookie.trim().split("=");
+          return [name, value];
+        })
+      );
+      
+      const accessToken = cookieMap.get("sb-access-token");
+      const refreshToken = cookieMap.get("sb-refresh-token");
+      
+      if (accessToken && refreshToken) {
+        // Set the session in the Supabase client and validate it
+        const { data: { session }, error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+        
+        if (session && !error) {
+          // User is already logged in, redirect to homepage
+          return new Response("", {
+            status: 302,
+            headers: {
+              Location: "/",
+            },
+          });
+        }
+      }
+    }
+    
     return page({});
   },
   async POST(ctx: FreshContext) {
@@ -39,7 +73,7 @@ export const handler = define.handlers<LoginPageData>({
     if (data.session) {      
       headers.append("Set-Cookie", `sb-access-token=${data.session.access_token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${data.session.expires_in}`);
       headers.append("Set-Cookie", `sb-refresh-token=${data.session.refresh_token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${30 * 24 * 60 * 60}`); // 30 days
-                  
+
       console.log("User logged in:", data.user?.email);
       console.log("Session expires at:", new Date(data.session.expires_at! * 1000));
     }
