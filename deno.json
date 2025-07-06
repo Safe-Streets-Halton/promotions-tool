@@ -1,7 +1,7 @@
 {
   "tasks": {
     "check": "deno fmt --check . && deno lint . && deno check",
-    "dev": "deno run -A --watch=static/,routes/ dev.ts",
+    "dev": "deno run -A --env-file=.env.local --watch=static/,routes/ dev.ts",
     "build": "deno run -A dev.ts build",
     "start": "deno run -A main.ts",
     "update": "deno run -A -r jsr:@fresh/update ."
@@ -22,7 +22,8 @@
     "preact": "npm:preact@^10.26.9",
     "@preact/signals": "npm:@preact/signals@^2.2.1",
     "tailwindcss": "npm:tailwindcss@^3.4.3",
-    "@fresh/plugin-tailwind": "jsr:@fresh/plugin-tailwind@^0.0.1-alpha.7"
+    "@fresh/plugin-tailwind": "jsr:@fresh/plugin-tailwind@^0.0.1-alpha.7",
+    "@supabase/supabase-js": "jsr:@supabase/supabase-js@^2.50.3"
   },
   "compilerOptions": {
     "lib": [
