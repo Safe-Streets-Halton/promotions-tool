@@ -2,6 +2,7 @@ import { FreshContext, page } from "fresh";
 import { define } from "../utils.ts";
 import { supabase } from "../lib/supabase.ts";
 import { State } from "../utils.ts";
+import { Button } from "../components/Button.tsx";
 
 interface LoginPageData {
   error?: string;
@@ -67,54 +68,89 @@ export const handler = define.handlers<LoginPageData>({
 export default define.page<typeof handler>(
   function Login({ data }: { data?: LoginPageData }) {
     return (
-      <main class="min-h-screen flex items-center justify-center bg-gray-50">
-        <div class="max-w-md w-full space-y-8">
-          <div>
-            <h1 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-              Sign in to your account
+      <div class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div class="max-w-md w-full">
+          <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+            {/* Logo */}
+            <img
+              class="mx-auto mb-6"
+              src="/ssh-icon.svg"
+              width="80"
+              height="80"
+              alt="Safe Streets Halton logo"
+            />
+            
+            {/* Title */}
+            <h1 class="text-2xl font-bold text-gray-900 mb-2 tracking-wide">
+              SAFE STREETS HALTON
             </h1>
-          </div>
-          <form class="mt-8 space-y-6" method="POST">
+            
+            <div class="mb-8">
+              <div class="w-12 h-0.5 bg-green-600 mx-auto mb-3"></div>
+              <p class="text-lg text-green-700 font-medium">Sign In</p>
+            </div>
+
+            {/* Error Message */}
             {data?.error && (
-              <div class="rounded-md bg-red-50 p-4">
+              <div class="rounded-md bg-red-50 p-4 mb-6">
                 <div class="text-sm text-red-700">{data.error}</div>
               </div>
             )}
-            <div class="rounded-md shadow-sm -space-y-px">
-              <div>
-                <label for="email" class="sr-only">Email address</label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Email address"
-                />
+
+            {/* Login Form */}
+            <form method="POST" class="space-y-6">
+              <div class="space-y-4">
+                <div>
+                  <label for="email" class="block text-sm font-medium text-gray-700 mb-2 text-left">
+                    Email Address
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900"
+                    placeholder="Enter your email"
+                  />
+                </div>
+                <div>
+                  <label for="password" class="block text-sm font-medium text-gray-700 mb-2 text-left">
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900"
+                    placeholder="Enter your password"
+                  />
+                </div>
               </div>
-              <div>
-                <label for="password" class="sr-only">Password</label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Password"
-                />
+
+              <div class="space-y-4">
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="md"
+                  fullWidth
+                >
+                  Sign In
+                </Button>
+                
+                <Button
+                  href="/"
+                  variant="outline"
+                  size="md"
+                  fullWidth
+                >
+                  Back to Home
+                </Button>
               </div>
-            </div>
-            <div>
-              <button
-                type="submit"
-                class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Sign in
-              </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
-      </main>
+      </div>
     );
   },
 );
