@@ -193,6 +193,132 @@ deno test --allow-env
 9. **Use type safety**: Leverage TypeScript in tests for better reliability
 10. **Document complex test scenarios**: Add comments for non-obvious test logic
 
+## Meaningful Testing Standards
+
+### What Makes a Test Meaningful
+
+A meaningful test provides **value** by testing actual functionality, business logic, or critical paths rather than trivial implementation details. Based on software engineering research, meaningful tests should:
+
+#### 1. **Test Critical Paths and Business Logic**
+- **DO**: Test user authentication flow, data validation, error handling
+- **DON'T**: Test that a variable assignment worked (`let x = 3; assertEquals(x, 3)`)
+
+#### 2. **Enable Safe Refactoring**
+- **DO**: Test public interfaces and expected behaviors
+- **DON'T**: Test internal implementation details that may change
+
+#### 3. **Catch Real Bugs**
+- **DO**: Test edge cases, boundary conditions, and error scenarios
+- **DON'T**: Test framework functionality or language features
+
+#### 4. **Serve as Documentation**
+- **DO**: Write tests that clearly show how the code should be used
+- **DON'T**: Write tests that require extensive comments to understand
+
+### When NOT to Write Tests
+
+#### Avoid Testing Trivial Code
+- **Simple getters/setters**: `get name() { return this.name; }`
+- **Basic assignments**: `this.value = input;`
+- **Framework functionality**: Testing that a library works as documented
+- **One-line delegates**: Methods that just call another method
+
+#### Examples of Non-Meaningful Tests
+```typescript
+// ❌ DON'T - Testing trivial assignment
+Deno.test("sets user name", () => {
+  const user = new User();
+  user.name = "John";
+  assertEquals(user.name, "John"); // Trivial - tests language feature
+});
+
+// ❌ DON'T - Testing framework behavior
+Deno.test("array has length", () => {
+  const arr = [1, 2, 3];
+  assertEquals(arr.length, 3); // Tests JavaScript, not your code
+});
+```
+
+#### Examples of Meaningful Tests
+```typescript
+// ✅ DO - Testing business logic
+Deno.test("validates email format before saving user", () => {
+  const user = new User();
+  assertThrows(() => {
+    user.setEmail("invalid-email"); // Tests validation logic
+  });
+});
+
+// ✅ DO - Testing integration and critical paths
+Deno.test("middleware redirects unauthenticated users to login", async () => {
+  const request = new Request("/protected");
+  const response = await middleware(request);
+  assertEquals(response.status, 302);
+  assertEquals(response.headers.get("Location"), "/login");
+});
+```
+
+### Test Quality Metrics
+
+#### 1. **Test Effectiveness**
+- **Formula**: (Defects Detected by Tests / Total Defects) × 100
+- **Goal**: High-quality tests that catch real issues
+
+#### 2. **Meaningful Coverage**
+- **Focus**: Critical paths, edge cases, business logic
+- **Avoid**: High percentage coverage of trivial code
+
+#### 3. **Test Maintenance Ratio**
+- **Measure**: Time spent maintaining tests vs. value provided
+- **Goal**: Tests that provide lasting value with minimal maintenance
+
+#### 4. **Defect Prevention**
+- **Measure**: Bugs caught by tests before production
+- **Goal**: Tests that prevent regression and catch edge cases
+
+### Test Value Assessment
+
+Before writing a test, ask:
+
+1. **Does this test verify important behavior?**
+   - Will this catch bugs that matter to users?
+   - Does this test critical business logic?
+
+2. **Will this test help during refactoring?**
+   - Does it test the public interface?
+   - Will it catch breaking changes?
+
+3. **Is this testing my code or the framework?**
+   - Am I testing third-party library behavior?
+   - Am I testing language features?
+
+4. **Does this test serve as good documentation?**
+   - Would a new developer understand the expected behavior?
+   - Is the test name clear and descriptive?
+
+### Meaningful Test Categories
+
+#### **High Value Tests**
+- Authentication and authorization flows
+- Data validation and sanitization
+- Error handling and edge cases
+- Critical business logic paths
+- Integration between components
+- Security boundary enforcement
+
+#### **Medium Value Tests**
+- Complex algorithms and calculations
+- State management and transitions
+- Configuration parsing and validation
+- API contract adherence
+
+#### **Low Value Tests (Consider Skipping)**
+- Simple property assignments
+- Basic CRUD operations without business logic
+- Framework or library functionality
+- Trivial helper functions
+- Configuration constants
+
 ### Common Anti-Patterns to Avoid
 
 - **Testing implementation details**: Test behavior, not internal structure
@@ -202,6 +328,8 @@ deno test --allow-env
 - **Mocking everything**: Use real implementations for simple dependencies
 - **No negative testing**: Always test error conditions and edge cases
 - **Duplicate test logic**: Extract common test utilities to reduce duplication
+- **Trivial testing**: Don't test assignments, getters, or framework functionality
+- **Testing for coverage numbers**: Focus on meaningful coverage, not percentages
 
 ### Resources
 
