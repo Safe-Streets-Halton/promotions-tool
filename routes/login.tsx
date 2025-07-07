@@ -123,6 +123,14 @@ export default define.page<typeof handler>(
                     class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900"
                     placeholder="Enter your password"
                   />
+                  <div class="text-right mt-2">
+                    <a
+                      href="/forgot-password"
+                      class="text-sm text-green-600 hover:text-green-700 hover:underline"
+                    >
+                      Forgot your password?
+                    </a>
+                  </div>
                 </div>
               </div>
               <div class="space-y-4">
