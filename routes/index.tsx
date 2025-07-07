@@ -24,10 +24,37 @@ export const handler = define.handlers<PageData>({
 export default define.page<typeof handler>(function Home({ data }: { data: PageData }) {
   // Get contact email from environment variable
   const contactEmail = Deno.env.get("CONTACT_EMAIL") || "info@safestreetshalton.ca";
-  
+  console.dir(data);  
   if (data.isLoggedIn) {
     return (
-      <div class="min-h-screen bg-gradient-to-br from-green-50 to-green-100">
+      <div class="min-h-screen bg-gray-50">
+        {/* Top Navigation */}
+        <nav class="bg-white shadow-sm">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+              <div class="flex items-center">
+                <img
+                  src="/ssh-icon.svg"
+                  width="32"
+                  height="32"
+                  alt="Safe Streets Halton logo"
+                  class="mr-2"
+                />                
+              </div>
+              <div class="flex items-center space-x-4">
+                <span class="text-sm text-gray-600">Welcome, {data.userEmail}</span>
+                <Button
+                  href="/logout"
+                  variant="outline"
+                  size="sm"
+                >
+                  Sign Out
+                </Button>
+              </div>
+            </div>
+          </div>
+        </nav>
+
         <div class="px-4 py-8 mx-auto">
           <div class="max-w-4xl mx-auto">
             <div class="text-center mb-8">
@@ -42,9 +69,6 @@ export default define.page<typeof handler>(function Home({ data }: { data: PageD
                 Welcome to Safe Streets Halton
               </h1>
               <h2 class="text-2xl text-gray-700 mb-4">Promotions Tool</h2>
-              <p class="text-lg text-gray-600 mb-8">
-                Hello, {data.userEmail}! You are successfully signed in.
-              </p>
             </div>
             
             <div class="bg-white rounded-lg shadow-lg p-8 text-center">
@@ -54,15 +78,6 @@ export default define.page<typeof handler>(function Home({ data }: { data: PageD
               <p class="text-gray-600 mb-6">
                 The main application features are currently under development.
               </p>
-              <div class="flex justify-center space-x-4">
-                <Button
-                  href="/logout"
-                  variant="outline"
-                  size="md"
-                >
-                  Sign Out
-                </Button>
-              </div>
             </div>
           </div>
         </div>
